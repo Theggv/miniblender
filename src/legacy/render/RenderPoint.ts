@@ -40,8 +40,8 @@ export class RenderPoint extends RenderShape {
     }
 
     Move(point: Vector2D): void {
-        this.model.x += point.X;
-        this.model.y += point.Y;
+        this.model.X += point.X;
+        this.model.Y += point.Y;
     }
 
     GetCollideShape(point: Vector2D, scene: Scene): RenderShape {

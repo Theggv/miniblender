@@ -31,8 +31,8 @@ export class Cursor {
     }
 
     public update(x: number, y: number) {
-        this.localCurrentPos.x = x;
-        this.localCurrentPos.y = y;
+        this.localCurrentPos.X = x;
+        this.localCurrentPos.Y = y;
 
         this.worldCurrentPos = this.scene.posFromLocalToWorld(
             this.scene.Renderer.convertFromCanvasToCenterCoords(
@@ -42,8 +42,8 @@ export class Cursor {
     }
 
     public click(x: number, y: number) {
-        this.localClickPos.x = x;
-        this.localClickPos.y = y;
+        this.localClickPos.X = x;
+        this.localClickPos.Y = y;
 
         this.worldClickPos = this.scene.posFromLocalToWorld(
             this.scene.Renderer.convertFromCanvasToCenterCoords(
