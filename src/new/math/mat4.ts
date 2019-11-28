@@ -138,8 +138,14 @@ export class mat4 {
         ]);
     }
 
-    static lookAt(eye: vec3, center: vec3, worldUp: vec3 = new vec3(0,1,0)): mat4 {
-        let f = vec3.minus(center, eye).normalize();
+    /**
+     * Матрица вида
+     * @param eye Позиция камеры
+     * @param target Цель
+     * @param worldUp Вектор, направленный вверх
+     */
+    static lookAt(eye: vec3, target: vec3, worldUp: vec3 = new vec3(0,1,0)): mat4 {
+        let f = vec3.minus(target, eye).normalize();
         let s = vec3.cross(f, worldUp.normalize()).normalize();
         let u = vec3.cross(s, f).normalize();
 
@@ -148,15 +154,6 @@ export class mat4 {
             s.y, u.y, -f.y, 0,
             s.z, u.z, -f.z, 0,
             -vec3.dot(s, eye), -vec3.dot(u, eye), vec3.dot(f, eye), 1
-        ]);
-    }
-
-    static viewPort(width, height): mat4 {
-        return new mat4([
-           width / 2, 0, 0, 0,
-           0, -height / 2, 0, 0,
-           0, 0, 1, 0,
-           width / 2, height / 2, 0, 1
         ]);
     }
 
@@ -195,6 +192,15 @@ export class mat4 {
             0, 0, -2 / (far - near), 0,
             -(right + left) / (right - left), -(top + bottom) / (top - bottom),
             - (far + near) / (far - near), 1
+        ]);
+    }
+
+    static viewPort(width, height): mat4 {
+        return new mat4([
+           width / 2, 0, 0, 0,
+           0, -height / 2, 0, 0,
+           0, 0, 1, 0,
+           width / 2, height / 2, 0, 1
         ]);
     }
 
