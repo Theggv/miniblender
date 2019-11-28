@@ -9,7 +9,7 @@ export class mat4 {
         this.m = matrix;
     }
 
-    static transfert(vec: vec3): mat4 {
+    static translate(vec: vec3): mat4 {
         return new mat4([
             1, 0, 0, 0,
             0, 1, 0, 0,

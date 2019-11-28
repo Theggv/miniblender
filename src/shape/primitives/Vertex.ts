@@ -25,7 +25,7 @@ export class Vertex extends IShape {
     }
 
     Move(vec: vec4) {
-        this.model = mat4.mulVec(this.model, mat4.transfert(vec));
+        this.model = mat4.mulVec(this.model, mat4.translate(vec));
         this.HasChanges = true;
     }
 
