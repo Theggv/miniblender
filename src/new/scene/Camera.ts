@@ -1,6 +1,5 @@
 import {vec4, mat4, vec3, radians, vec2} from "../math";
 import {Scene} from "./Scene";
-import {transform} from "async";
 import {CameraControl} from "./CameraControl";
 
 export class Camera {
