@@ -4,8 +4,11 @@ import {Container} from "./Container";
 import {mat4, Rect, vec3, vec4} from "../math";
 import {Box, Line, Plane} from "../shape/primitives";
 import {DepthVS} from "../shader/DepthVS";
+import {FPSCounter} from "../util/FPSCounter";
 
 export class Scene {
+    private fpsCounter: FPSCounter;
+
     readonly Size: Rect;
     readonly Camera: Camera;
     readonly Renderer: Renderer;
@@ -16,27 +19,52 @@ export class Scene {
         this.Renderer = new Renderer(this);
         this.Container = new Container(this);
 
+        this.fpsCounter = new FPSCounter();
+
         this.Camera = new Camera(
             new vec3(-200, 50, -200), 0, 0
         );
 
-        // x - red
-        this.Container.Shapes.push(
-            new Line(this, new vec4(), new vec4(100, 0), 'red'));
-
-        // y - green
-        this.Container.Shapes.push(
-            new Line(this, new vec4(), new vec4(0, 100), 'green'));
-
-        // z - blue
-        this.Container.Shapes.push(
-            new Line(this, new vec4(), new vec4(0, 0, 100), 'blue'));
+        this.addAxis();
+        // this.addField();
 
         this.domiq();
-        // this.qubiq()
 
         setInterval(() => this.draw(), 1000 / 100);
         // this.draw();
+    }
+
+    private addAxis(): void {
+        // x - red
+        this.Container.Shapes.push(
+            new Line(this, new vec4(), new vec4(100, 0), 'red', 5));
+
+        // y - green
+        this.Container.Shapes.push(
+            new Line(this, new vec4(), new vec4(0, 100), 'green', 5));
+
+        // z - blue
+        this.Container.Shapes.push(
+            new Line(this, new vec4(), new vec4(0, 0, 100), 'blue', 5));
+    }
+
+    private addField(): void {
+        let step = 50;
+        let numLines = 20;
+
+        for (let x = -step * numLines; x < step * numLines; x += step) {
+            this.Container.Shapes.push(new Line(this,
+                new vec4(x, 0, -step * numLines),
+                new vec4(x, 0, step * numLines),
+                'grey', 2));
+        }
+
+        for (let z = -step * numLines; z < step * numLines; z += step) {
+            this.Container.Shapes.push(new Line(this,
+                new vec4(-step * numLines, 0, z),
+                new vec4(step * numLines, 0, z),
+                'grey', 2));
+        }
     }
 
     domiq(): void {
@@ -122,14 +150,6 @@ export class Scene {
         ));
     }
 
-    qubiq(): void {
-        this.Container.Shapes.push(
-            new Box(this,
-                new vec4(-10, -10, -10),
-                new vec4(10, 10, 10)
-            ));
-    }
-
     draw(): void {
         DepthVS.ViewMatrix = this.Camera.ViewMatrix;
 
@@ -150,5 +170,7 @@ export class Scene {
         this.Camera.update();
 
         this.Container.render();
+
+        this.fpsCounter.call();
     }
 }

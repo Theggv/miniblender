@@ -126,10 +126,10 @@ export class Renderer {
         this.ctx.fill();
     }
 
-    drawLine(from: vec2, to: vec2, color: string): void {
+    drawLine(from: vec2, to: vec2, color: string, width: number): void {
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
-        this.ctx.lineWidth = 3;
+        this.ctx.lineWidth = width;
         this.ctx.moveTo(from.x, from.y);
         this.ctx.lineTo(to.x, to.y);
         this.ctx.stroke();

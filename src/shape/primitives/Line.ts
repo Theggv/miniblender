@@ -12,14 +12,16 @@ export class Line extends IShape {
     private readonly _to: Vertex;
 
     public Color: string;
+    public Width: number;
 
-    constructor(scene: Scene, from: vec4, to: vec4, color: string = 'black') {
+    constructor(scene: Scene, from: vec4, to: vec4, color: string = 'black', width: number = 3) {
         super(scene);
 
         this._from = new Vertex(scene, from);
         this._to = new Vertex(scene, to);
 
         this.Color = color;
+        this.Width = width;
     }
 
     Move(vec: vec4) {
@@ -37,7 +39,7 @@ export class Line extends IShape {
 
         if (isFromInside && isToInside) {
             this.scene.Renderer.drawLine(
-                this._from.ToView(), this._to.ToView(), this.Color
+                this._from.ToView(), this._to.ToView(), this.Color, this.Width
             )
         }
         else if(isFromInside) {
