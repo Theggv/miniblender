@@ -6,7 +6,6 @@ export class Renderer {
     private zBuffer: Array<number>;
 
     private readonly view: HTMLCanvasElement;
-    private readonly gl: WebGLRenderingContext;
     private readonly ctx: CanvasRenderingContext2D;
 
     public readonly Size: Rect;
@@ -33,15 +32,7 @@ export class Renderer {
 
         container.appendChild(this.view);
 
-        // this.gl = this.initWebGl(this.view);
         this.ctx = this.view.getContext('2d');
-
-        if(this.gl) {
-            this.gl.clearColor(255.0, 255.0, 255.0, 1.0);
-            this.gl.enable(this.gl.DEPTH_TEST);
-            this.gl.depthFunc(this.gl.LEQUAL);
-            this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-        }
 
         this.initView();
     }
@@ -61,24 +52,7 @@ export class Renderer {
         })
     }
 
-    private initWebGl(canvas): WebGLRenderingContext {
-        let gl = null;
-
-        try {
-            gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
-        }
-        catch(e) {}
-
-        if(!gl) {
-            alert('Failed to init WebGL');
-            gl = null;
-        }
-
-        return gl;
-    }
-
     clear(): void {
-        // this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
         this.ctx.clearRect(0, 0, this.Size.Width, this.Size.Height);
     }
 
@@ -90,8 +64,6 @@ export class Renderer {
 
         if(vec.z > this.zBuffer[idx]) {
             this.zBuffer[idx] = vec.z;
-            // this.gl.fillStyle = color;
-            // this.gl.fillRect(vec.x, vec.y, 1, 1);
         }
     }
 
@@ -161,18 +133,5 @@ export class Renderer {
         this.ctx.moveTo(from.x, from.y);
         this.ctx.lineTo(to.x, to.y);
         this.ctx.stroke();
-    }
-
-    private viewToScreen(vec: vec2): vec2 {
-        return new vec4(
-            this.Size.Right + vec.x,
-            -(this.Size.Bottom + vec.y)
-        );
-    }
-
-    private screenToView(vec: vec2): vec2 {
-        return new vec4(
-
-        );
     }
 }
