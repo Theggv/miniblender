@@ -3,8 +3,6 @@ import {Scene} from "./Scene";
 import {CameraControl} from "./CameraControl";
 
 export class Camera {
-    private pressedKeys;
-    private lastPos: vec2;
     private control: CameraControl;
 
     // Attributes
@@ -53,10 +51,9 @@ export class Camera {
 
     /**
      * Создает камеру
-     * @constructor
-     * @param worldPos Позиция камеры в сцене
-     * @param viewAngles Углы наклона камеры
-     * @param viewDistance Растояние от положения камеры
+     * @param pos Позиция камеры
+     * @param yaw наклон по Y
+     * @param pitch наклон по X
      */
     constructor(
         pos: vec3 = new vec3(),
@@ -113,16 +110,6 @@ export class Camera {
         this.Pitch += vec.y;
 
         this.fixAngles();
-    }
-
-    ChangeZoom(value: number): void {
-        this.Zoom += value;
-
-        if(this.Zoom < 1)
-            this.Zoom = 1;
-
-        if(this.Zoom > 45)
-            this.Zoom = 45;
     }
 
     private fixAngles(): void {
