@@ -25,7 +25,7 @@ export class RenderLine extends RenderShape {
     }
 
     Render(scene: Scene): void {
-        // render line
+        // draw line
         if (this.IsSelected) {
             scene.drawLine(
                 this.points[0].Model,
@@ -42,7 +42,7 @@ export class RenderLine extends RenderShape {
             );
         }
 
-        // render points
+        // draw points
         for (let point of this.points) {
             point.Render(scene);
         }

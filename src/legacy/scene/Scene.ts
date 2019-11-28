@@ -123,16 +123,16 @@ export class Scene {
     public renderFrame() {
         this.renderer.Clear();
 
-        // render field
+        // draw field
         if(this.isDrawField)
             this.drawField();
 
-        // render objects
+        // draw objects
         this.container.render();
 
         this.renderer.Draw();
 
-        // render info
+        // draw info
         this.drawCursorCoords();
 
         // shape info

@@ -35,8 +35,8 @@ export class Scene {
         this.domiq();
         // this.qubiq()
 
-        setInterval(() => this.render(), 1000 / 100);
-        // this.render();
+        setInterval(() => this.draw(), 1000 / 100);
+        // this.draw();
     }
 
     domiq(): void {
@@ -130,7 +130,7 @@ export class Scene {
             ));
     }
 
-    render(): void {
+    draw(): void {
         DepthVS.ViewMatrix = this.Camera.ViewMatrix;
 
         if (this.Camera.Mod == ViewMod.Perspective)
