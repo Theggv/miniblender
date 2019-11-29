@@ -1,5 +1,6 @@
 import {Camera} from "./Camera";
 import {vec2, vec3} from "../math";
+import {TraceVS} from "../shader/TraceVS";
 
 export class CameraControl {
     private pressedKeys;
@@ -67,6 +68,9 @@ export class CameraControl {
         document.getElementById('canv-main')
             .addEventListener('mousedown', (e: any) => {
             this.lastPos = new vec2(e.layerX, e.layerY);
+
+            let traceLine = TraceVS.trace(this.lastPos);
+            console.log(traceLine);
         });
 
         document.getElementById('canv-main')

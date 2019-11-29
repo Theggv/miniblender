@@ -1,7 +1,7 @@
 import {Camera, ViewMod} from "./Camera";
 import {Renderer} from "../renderer/Renderer";
 import {Container} from "./Container";
-import {mat4, Rect, vec3, vec4} from "../math";
+import {mat4, radians, Rect, vec3, vec4} from "../math";
 import {Box, Line, Plane} from "../shape/primitives";
 import {DepthVS} from "../shader/DepthVS";
 import {FPSCounter} from "../util/FPSCounter";
@@ -9,7 +9,7 @@ import {FPSCounter} from "../util/FPSCounter";
 export class Scene {
     private fpsCounter: FPSCounter;
 
-    readonly Size: Rect;
+    Size: Rect;
     readonly Camera: Camera;
     readonly Renderer: Renderer;
     readonly Container: Container;

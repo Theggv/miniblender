@@ -1,12 +1,17 @@
 import {vec3} from "./vec3";
 import {vec4} from "./vec4";
 import {radians} from "./index";
+import {mat3} from "./mat3";
 
 export class mat4 {
     readonly m: Array<number>;
 
     constructor(matrix: Array<number>) {
         this.m = matrix;
+    }
+
+    translate(vec: vec3): mat4 {
+        return mat4.mul(this, mat4.translate(vec));
     }
 
     static translate(vec: vec3): mat4 {
@@ -18,6 +23,10 @@ export class mat4 {
         ]);
     }
 
+    rotateX(a: number): mat4 {
+        return mat4.mul(this, mat4.rotateX(a));
+    }
+
     static rotateX(a: number): mat4 {
         return new mat4([
             1, 0, 0, 0,
@@ -25,6 +34,10 @@ export class mat4 {
             0, -Math.sin(a), Math.cos(a), 0,
             0, 0, 0, 1
         ]);
+    }
+
+    rotateY(a: number): mat4 {
+        return mat4.mul(this, mat4.rotateY(a));
     }
 
     static rotateY(a: number): mat4 {
@@ -36,6 +49,10 @@ export class mat4 {
         ]);
     }
 
+    rotateZ(a: number): mat4 {
+        return mat4.mul(this, mat4.rotateZ(a));
+    }
+
     static rotateZ(a: number): mat4 {
         return new mat4([
             Math.cos(a), Math.sin(a), 0, 0,
@@ -43,6 +60,10 @@ export class mat4 {
             0, 0, 1, 0,
             0, 0, 0, 1
         ]);
+    }
+
+    scale(vec: vec3): mat4 {
+        return mat4.mul(this, mat4.scale(vec));
     }
 
     static scale(vec: vec3) {
@@ -55,27 +76,7 @@ export class mat4 {
     }
 
     mul(b: mat4): mat4 {
-        return new mat4([
-            this.m[0] * b.m[0] + this.m[1] * b.m[4] + this.m[2] * b.m[8] + this.m[3] * b.m[12],
-            this.m[0] * b.m[1] + this.m[1] * b.m[5] + this.m[2] * b.m[9] + this.m[3] * b.m[13],
-            this.m[0] * b.m[2] + this.m[1] * b.m[6] + this.m[2] * b.m[10] + this.m[3] * b.m[14],
-            this.m[0] * b.m[3] + this.m[1] * b.m[7] + this.m[2] * b.m[11] + this.m[3] * b.m[15],
-
-            this.m[4] * b.m[0] + this.m[5] * b.m[4] + this.m[6] * b.m[8] + this.m[7] * b.m[12],
-            this.m[4] * b.m[1] + this.m[5] * b.m[5] + this.m[6] * b.m[9] + this.m[7] * b.m[13],
-            this.m[4] * b.m[2] + this.m[5] * b.m[6] + this.m[6] * b.m[10] + this.m[7] * b.m[14],
-            this.m[4] * b.m[3] + this.m[5] * b.m[7] + this.m[6] * b.m[11] + this.m[7] * b.m[15],
-
-            this.m[8] * b.m[0] + this.m[9] * b.m[4] + this.m[10] * b.m[8] + this.m[11] * b.m[12],
-            this.m[8] * b.m[1] + this.m[9] * b.m[5] + this.m[10] * b.m[9] + this.m[11] * b.m[13],
-            this.m[8] * b.m[2] + this.m[9] * b.m[6] + this.m[10] * b.m[10] + this.m[11] * b.m[14],
-            this.m[8] * b.m[3] + this.m[9] * b.m[7] + this.m[10] * b.m[11] + this.m[11] * b.m[15],
-
-            this.m[12] * b.m[0] + this.m[13] * b.m[4] + this.m[14] * b.m[8] + this.m[15] * b.m[12],
-            this.m[12] * b.m[1] + this.m[13] * b.m[5] + this.m[14] * b.m[9] + this.m[15] * b.m[13],
-            this.m[12] * b.m[2] + this.m[13] * b.m[6] + this.m[14] * b.m[10] + this.m[15] * b.m[14],
-            this.m[12] * b.m[3] + this.m[13] * b.m[7] + this.m[14] * b.m[11] + this.m[15] * b.m[15],
-        ]);
+        return mat4.mul(this, b);
     }
 
     static mul(a: mat4, b: mat4): mat4 {
@@ -103,12 +104,7 @@ export class mat4 {
     }
 
     mulVec(vec: vec4): vec4 {
-         return new vec4(
-          vec.x * this.m[0] + vec.y * this.m[4] + vec.z * this.m[8] + vec.w * this.m[12],
-          vec.x * this.m[1] + vec.y * this.m[5] + vec.z * this.m[9] + vec.w * this.m[13],
-          vec.x * this.m[2] + vec.y * this.m[6] + vec.z * this.m[10] + vec.w  * this.m[14],
-          vec.x * this.m[3] + vec.y * this.m[7] + vec.z * this.m[11] + vec.w  * this.m[15],
-        );
+         return mat4.mulVec(vec, this);
     }
     
     static mulVec(vec: vec4, m: mat4): vec4 {
@@ -121,20 +117,15 @@ export class mat4 {
     }
     
     transpose(): mat4 {
-        return new mat4([
-           this.m[0], this.m[4], this.m[8], this.m[12],
-           this.m[1], this.m[5], this.m[9], this.m[13],
-           this.m[2], this.m[6], this.m[10], this.m[14],
-           this.m[3], this.m[7], this.m[11], this.m[15],
-        ]);
+        return mat4.transpose(this);
     }
 
     static transpose(mat: mat4): mat4 {
         return new mat4([
            mat.m[0], mat.m[4], mat.m[8], mat.m[12],
            mat.m[1], mat.m[5], mat.m[9], mat.m[13],
-           mat.m[2], mat.m[5], mat.m[10], mat.m[14],
-           mat.m[3], mat.m[6], mat.m[11], mat.m[15],
+           mat.m[2], mat.m[6], mat.m[10], mat.m[14],
+           mat.m[3], mat.m[7], mat.m[11], mat.m[15],
         ]);
     }
 
@@ -204,13 +195,102 @@ export class mat4 {
         ]);
     }
 
-    static debug(mat: mat4, message: string = undefined) {
+    determinant() {
+        return mat4.determinant(this);
+    }
+
+    static determinant(mat: mat4) {
+        return mat.m[0] * mat3.determinant(new mat3([
+            mat.m[5], mat.m[6], mat.m[7],
+            mat.m[9], mat.m[10], mat.m[11],
+            mat.m[13], mat.m[14], mat.m[15]
+        ]))
+            - mat.m[1] * mat3.determinant(new mat3([
+            mat.m[4], mat.m[6], mat.m[7],
+            mat.m[8], mat.m[10], mat.m[11],
+            mat.m[12], mat.m[14], mat.m[15]
+        ]))
+            + mat.m[2] * mat3.determinant(new mat3([
+            mat.m[4], mat.m[5], mat.m[7],
+            mat.m[8], mat.m[9], mat.m[11],
+            mat.m[12], mat.m[13], mat.m[15]
+        ]))
+            - mat.m[3] * mat3.determinant(new mat3([
+            mat.m[4], mat.m[5], mat.m[6],
+            mat.m[8], mat.m[9], mat.m[10],
+            mat.m[12], mat.m[13], mat.m[14]
+        ]));
+    }
+
+    inverse(): mat4 {
+        return mat4.inverse(this);
+    }
+
+    static inverse(mat: mat4): mat4 {
+        let det = mat.determinant();
+
+        if(!det)
+            return null;
+
+        let minorMatrix: number[] = [];
+        let m3: number[] = [];
+        let sign;
+
+        for (let col = 0; col < 4; ++col) {
+            for (let row = 0; row < 4; ++row) {
+                m3 = [];
+
+                for(let i = 0; i < 4; ++i) {
+                    if (i == col) continue;
+
+                    for(let j = 0; j < 4; ++j) {
+                        if(j == row) continue;
+
+                        m3.push(mat.m[i * 4 + j]);
+                    }
+                }
+
+                sign = Math.pow(-1, row + col);
+
+                // console.log('m[' + col + '][' + row + ']: sign ' + sign);
+                // console.log(m3[0].toFixed(3) + '\t' + m3[1].toFixed(3) + '\t' + m3[2].toFixed(3));
+                // console.log(m3[3].toFixed(3) + '\t' + m3[4].toFixed(3) + '\t' + m3[5].toFixed(3));
+                // console.log(m3[6].toFixed(3) + '\t' + m3[7].toFixed(3) + '\t' + m3[8].toFixed(3));
+
+                minorMatrix.push(sign * mat3.determinant(new mat3(m3)) / det);
+            }
+        }
+
+        return new mat4(minorMatrix).transpose();
+    }
+
+    debug(message: string = undefined) {
+        mat4.debug(this, message);
+    }
+
+    static debug(mat: mat4, message: string = undefined): void {
         if(message)
             console.log(message);
 
-        console.log(mat.m[0] + '\t' + mat.m[1] + '\t' + mat.m[2] + '\t' + mat.m[3]);
-        console.log(mat.m[4] + '\t' + mat.m[5] + '\t' + mat.m[6] + '\t' + mat.m[7]);
-        console.log(mat.m[8] + '\t' + mat.m[9] + '\t' + mat.m[10]+ '\t' + mat.m[11]);
-        console.log(mat.m[12]+ '\t' + mat.m[13]+ '\t'+ mat.m[14] + '\t' + mat.m[15]);
+        console.log(
+            mat.m[0].toFixed(3) + '\t' +
+            mat.m[1].toFixed(3) + '\t' +
+            mat.m[2].toFixed(3) + '\t' +
+            mat.m[3].toFixed(3));
+        console.log(
+            mat.m[4].toFixed(3) + '\t' +
+            mat.m[5].toFixed(3) + '\t' +
+            mat.m[6].toFixed(3) + '\t' +
+            mat.m[7].toFixed(3));
+        console.log(
+            mat.m[8].toFixed(3) + '\t' +
+            mat.m[9].toFixed(3) + '\t' +
+            mat.m[10].toFixed(3)+ '\t' +
+            mat.m[11].toFixed(3));
+        console.log(
+            mat.m[12].toFixed(3) + '\t' +
+            mat.m[13].toFixed(3) + '\t'+
+            mat.m[14].toFixed(3) + '\t' +
+            mat.m[15].toFixed(3));
     }
 }

@@ -8,7 +8,7 @@ export class Renderer {
     private readonly view: HTMLCanvasElement;
     private readonly ctx: CanvasRenderingContext2D;
 
-    public readonly Size: Rect;
+    public Size: Rect;
 
     get View(): HTMLCanvasElement {
         return this.view;
@@ -17,39 +17,42 @@ export class Renderer {
     constructor(scene: Scene) {
         this.scene = scene;
 
-        this.Size = new Rect(new vec4(
-           -scene.Size.Width / 2, -scene.Size.Height / 2,
-           scene.Size.Width, scene.Size.Height
-        ));
-
-        this.zBuffer = new Array<number>(this.Size.Width * this.Size.Height);
-
         let container = document.getElementById('sceneContainer');
+        container.onresize = (e) => this.resize(container.offsetWidth, container.offsetHeight);
 
         this.view = document.createElement('canvas');
         this.view.id = 'canv-main';
         this.view.oncontextmenu = (e) => false;
+        this.view.style.width = '100%';
+        this.view.style.height = '100%';
 
         container.appendChild(this.view);
 
         this.ctx = this.view.getContext('2d');
 
-        this.initView();
-    }
-
-    private initView(): void {
-        this.view.style.width = '100%';
-        this.view.style.height = '100%';
-
-        this.view.width = this.scene.Size.Width;
-        this.view.height = this.scene.Size.Height;
-
+        this.resize(scene.Size.Width, scene.Size.Height);
 
         this.view.addEventListener('mousedown', (e: any) => {
             if(e.button == 2) {
                 this.scene.Camera.ChangeMod();
             }
-        })
+        });
+
+        console.log(this.Size);
+
+        this.zBuffer = new Array<number>(this.Size.Width * this.Size.Height);
+    }
+
+    private resize(width: number, height: number): void {
+        this.Size = new Rect(new vec4(
+            -width / 2, -height / 2,
+            width, height
+        ));
+
+        this.view.width = width;
+        this.view.height = height;
+
+        this.scene.Size = this.Size;
     }
 
     clear(): void {

@@ -48,10 +48,10 @@ export class Vertex extends IShape {
     ToView(): vec4 {
         let vec = DepthVS.Transform(this.model);
 
-        console.log(
-            vec.x.toFixed(3),
-            vec.y.toFixed(3),
-            vec.z.toFixed(3));
+        // console.log(
+        //     vec.x.toFixed(3),
+        //     vec.y.toFixed(3),
+        //     vec.z.toFixed(3));
 
         return vec;
     }
@@ -62,7 +62,7 @@ export class Vertex extends IShape {
 
         let point = vec4.mulVecMat(this.model, mat);
 
-        console.log(point.x + '\t' + point.y + '\t' + point.z + '\t' + point.w);
+        // console.log(point.x + '\t' + point.y + '\t' + point.z + '\t' + point.w);
 
         if(point.x < -point.w || point.x > point.w)
             return false;
