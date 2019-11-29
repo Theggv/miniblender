@@ -161,6 +161,7 @@ export class Scene {
                 Camera.OrthographicMatrix(this.Size.Width, this.Size.Height);
 
         DepthVS.Viewport = Camera.ViewPort(this.Size.Width, this.Size.Height);
+        DepthVS.InverseViewport = this.Renderer.getInverseViewport();
         DepthVS.CalculateMatrix();
 
         // mat4.debug(DepthVS.ViewMatrix, "ViewMatrix:");

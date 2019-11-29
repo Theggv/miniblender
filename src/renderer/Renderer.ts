@@ -1,7 +1,8 @@
 import {Scene} from "../scene/Scene";
-import {vec4, Rect, vec2, vec3} from "../math";
+import {vec4, Rect, vec2, vec3, mat4} from "../math";
 
 export class Renderer {
+    private container: HTMLElement;
     private scene: Scene;
     private zBuffer: Array<number>;
 
@@ -17,20 +18,20 @@ export class Renderer {
     constructor(scene: Scene) {
         this.scene = scene;
 
-        let container = document.getElementById('sceneContainer');
-        container.onresize = (e) => this.resize(container.offsetWidth, container.offsetHeight);
+        this.container = document.getElementById('sceneContainer');
 
         this.view = document.createElement('canvas');
         this.view.id = 'canv-main';
         this.view.oncontextmenu = (e) => false;
-        this.view.style.width = '100%';
-        this.view.style.height = '100%';
 
-        container.appendChild(this.view);
+        this.container.appendChild(this.view);
 
         this.ctx = this.view.getContext('2d');
 
-        this.resize(scene.Size.Width, scene.Size.Height);
+        // @ts-ignore
+        new ResizeObserver(this.resize.bind(this)).observe(this.container);
+
+        this.resize();
 
         this.view.addEventListener('mousedown', (e: any) => {
             if(e.button == 2) {
@@ -38,12 +39,19 @@ export class Renderer {
             }
         });
 
-        console.log(this.Size);
-
         this.zBuffer = new Array<number>(this.Size.Width * this.Size.Height);
     }
 
-    private resize(width: number, height: number): void {
+    private resize(): void {
+        let display = this.view.style.display;
+        this.view.style.display = 'none';
+
+        let width = this.container.offsetWidth * 2;
+        let height = this.container.offsetHeight * 2;
+
+        this.view.style.width = '100%';
+        this.view.style.height = '100%';
+
         this.Size = new Rect(new vec4(
             -width / 2, -height / 2,
             width, height
@@ -51,8 +59,13 @@ export class Renderer {
 
         this.view.width = width;
         this.view.height = height;
+        this.view.style.display = display;
 
         this.scene.Size = this.Size;
+    }
+
+    getInverseViewport(): mat4 {
+        return mat4.viewPort(this.container.offsetWidth, this.container.offsetHeight).inverse();
     }
 
     clear(): void {

@@ -6,6 +6,7 @@ export class DepthVS {
     static ViewMatrix: mat4;
     static Projection: mat4;
     static Viewport: mat4;
+    static InverseViewport: mat4;
 
     static CalculateMatrix() {
         this.matrix = this.ViewMatrix

@@ -33,6 +33,7 @@ header, footer {
 
 .container--canvas {
 	flex: 1;
+	overflow: hidden;
 }
 
 #canvas {

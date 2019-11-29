@@ -1,6 +1,8 @@
 import {Camera} from "./Camera";
 import {vec2, vec3} from "../math";
 import {TraceVS} from "../shader/TraceVS";
+import {DepthVS} from "../shader/DepthVS";
+import {line3} from "../math/line3";
 
 export class CameraControl {
     private pressedKeys;
@@ -69,8 +71,9 @@ export class CameraControl {
             .addEventListener('mousedown', (e: any) => {
             this.lastPos = new vec2(e.layerX, e.layerY);
 
-            let traceLine = TraceVS.trace(this.lastPos);
-            console.log(traceLine);
+            let ray = new line3(TraceVS.trace(this.lastPos), this.cam.Position);
+
+            console.log(ray.distToPoint(new vec3(0, 100, 0)));
         });
 
         document.getElementById('canv-main')
