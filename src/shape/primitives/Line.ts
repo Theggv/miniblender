@@ -108,13 +108,13 @@ export class Line extends IShape {
         let min = new vec3(Math.min(from.x, to.x), Math.min(from.y, to.y), Math.min(from.z, to.z));
         let max = new vec3(Math.max(from.x, to.x), Math.max(from.y, to.y), Math.max(from.z, to.z));
 
-        if(point.x < min.x || point.x > max.x)
+        if (point.x < min.x || point.x > max.x)
             return false;
 
-        if(point.y < min.y || point.y > max.y)
+        if (point.y < min.y || point.y > max.y)
             return false;
 
-        if(point.z < min.z || point.z > max.z)
+        if (point.z < min.z || point.z > max.z)
             return false;
 
         return true;

@@ -23,7 +23,7 @@ export class Scene {
         this.fpsCounter = new FPSCounter();
 
         this.Camera = new Camera(
-            new vec3(-200, 0, 0), 0, 0
+            new vec3(200, 100, 250), 225, -30
         );
 
         this.addAxis();
