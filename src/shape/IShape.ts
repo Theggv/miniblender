@@ -2,6 +2,10 @@ import {vec4} from "../math";
 import {Scene} from "../scene/Scene";
 
 export abstract class IShape {
+    private static _id: number = 0;
+
+    readonly id: number;
+
     protected scene: Scene;
     protected parent: IShape;
     protected readonly children: Set<IShape>;
@@ -39,6 +43,7 @@ export abstract class IShape {
 
     constructor(scene: Scene) {
         this.scene = scene;
+        this.id = IShape._id++;
 
         this.children = new Set<IShape>();
     }
@@ -51,5 +56,5 @@ export abstract class IShape {
 
     abstract Render(): void;
 
-    abstract IsInsideView(): boolean;
+    abstract IsVisible(): boolean;
 }

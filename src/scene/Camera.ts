@@ -23,7 +23,7 @@ export class Camera {
     Mod: ViewMod = ViewMod.Perspective;
 
     // Attach
-    IsAttached: boolean;
+    IsAttached: boolean = false;
     AttachPosition: vec3;
 
     get ViewMatrix(): mat4 {
@@ -35,7 +35,7 @@ export class Camera {
 
     static PerspectiveMatrix(width: number, height: number): mat4 {
         return mat4.perspective(
-            90, width / height, 0.1, 1000);
+            90, width / height, 1, 1000);
     }
 
     static OrthographicMatrix(width: number, height: number): mat4 {
@@ -64,8 +64,6 @@ export class Camera {
         this.WorldUp = new vec3(0, 1, 0);
         this.Yaw = yaw;
         this.Pitch = pitch;
-
-        this.IsAttached = false;
         this.AttachPosition = new vec3();
 
         this.control = new CameraControl(this);

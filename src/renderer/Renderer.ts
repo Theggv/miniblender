@@ -1,5 +1,6 @@
 import {Scene} from "../scene/Scene";
 import {vec4, Rect, vec2, vec3, mat4} from "../math";
+import {DepthVS} from "../shader/DepthVS";
 
 export class Renderer {
     private container: HTMLElement;
@@ -135,19 +136,39 @@ export class Renderer {
         }
     }
 
+    /**
+     *
+     * @param vec NDC coords
+     */
     drawCircle(vec: vec2): void {
+        let viewport = this.toViewport(vec);
+
         this.ctx.beginPath();
         this.ctx.fillStyle = 'black';
-        this.ctx.arc(vec.x, vec.y, 2, 0, Math.PI * 2);
+        this.ctx.arc(viewport.x, viewport.y, 2, 0, Math.PI * 2);
         this.ctx.fill();
     }
 
+    /**
+     *
+     * @param from NDC coords
+     * @param to NDC coords
+     * @param color
+     * @param width
+     */
     drawLine(from: vec2, to: vec2, color: string, width: number): void {
+        let fromViewport = this.toViewport(from);
+        let toViewport = this.toViewport(to);
+
         this.ctx.beginPath();
         this.ctx.strokeStyle = color;
         this.ctx.lineWidth = width;
-        this.ctx.moveTo(from.x, from.y);
-        this.ctx.lineTo(to.x, to.y);
+        this.ctx.moveTo(fromViewport.x, fromViewport.y);
+        this.ctx.lineTo(toViewport.x, toViewport.y);
         this.ctx.stroke();
+    }
+
+    private toViewport(vec: vec2): vec2 {
+        return vec4.mulVecMat(new vec4(vec.x, vec.y), DepthVS.Viewport);
     }
 }

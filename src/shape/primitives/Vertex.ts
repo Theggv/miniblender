@@ -2,6 +2,7 @@ import {IShape} from "../IShape";
 import {vec4, mat4, vec3} from "../../math";
 import {Scene} from "../../scene/Scene";
 import {DepthVS} from "../../shader/DepthVS";
+import {Frustum} from "../../renderer/Frustum";
 
 export class Vertex extends IShape {
     private model: vec4;
@@ -16,6 +17,10 @@ export class Vertex extends IShape {
 
     get Z(): number {
         return this.model.z;
+    }
+
+    get Point(): vec3 {
+        return this.model.normalize3();
     }
 
     constructor(scene: Scene, vec: vec4) {
@@ -38,6 +43,9 @@ export class Vertex extends IShape {
     }
 
     Render(): void {
+        if(!this.IsVisible())
+            return;
+
         this.scene.Renderer.drawCircle(
             this.ToView()
         );
@@ -46,32 +54,19 @@ export class Vertex extends IShape {
     }
 
     ToView(): vec4 {
-        let vec = DepthVS.Transform(this.model);
+        let vec: vec4;
+        vec = DepthVS.Transform(this.model);
+        // vec.z = DepthVS.LinearDepthTest(vec.z);
 
-        // console.log(
-        //     vec.x.toFixed(3),
-        //     vec.y.toFixed(3),
-        //     vec.z.toFixed(3));
+        console.log(
+            vec.x.toFixed(3),
+            vec.y.toFixed(3),
+            vec.z.toFixed(3));
 
         return vec;
     }
 
-    IsInsideView(): boolean {
-        let mat = DepthVS.ViewMatrix
-            .mul(DepthVS.Projection);
-
-        let point = vec4.mulVecMat(this.model, mat);
-
-        // console.log(point.x + '\t' + point.y + '\t' + point.z + '\t' + point.w);
-
-        if(point.x < -point.w || point.x > point.w)
-            return false;
-        if(point.y < -point.w || point.y > point.w)
-            return false;
-        if(point.z < -point.w || point.z > point.w)
-            return false;
-
-
-        return true;
+    IsVisible(): boolean {
+        return Frustum.Instance.IsPointInside(this.Point);
     }
 }

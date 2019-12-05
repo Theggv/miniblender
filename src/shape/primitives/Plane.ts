@@ -30,13 +30,7 @@ export class Plane extends IShape {
     Scale(vec: vec4) {
     }
 
-    IsInsideView(): boolean {
-        let isInside = true;
-        this.model.forEach(line => {
-            if(line.IsInsideView())
-                isInside = false;
-        })
-
-        return isInside;
+    IsVisible(): boolean {
+        return true;
     }
 }

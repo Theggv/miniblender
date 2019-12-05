@@ -64,6 +64,7 @@ export class vec4 extends vec3 {
 
     normalize(): vec4 {
         let len = this.length();
+
         if (!len)
             return this;
 

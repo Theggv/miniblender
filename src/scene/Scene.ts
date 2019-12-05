@@ -5,6 +5,7 @@ import {mat4, radians, Rect, vec3, vec4} from "../math";
 import {Box, Line, Plane} from "../shape/primitives";
 import {DepthVS} from "../shader/DepthVS";
 import {FPSCounter} from "../util/FPSCounter";
+import {Frustum} from "../renderer/Frustum";
 
 export class Scene {
     private fpsCounter: FPSCounter;
@@ -22,26 +23,26 @@ export class Scene {
         this.fpsCounter = new FPSCounter();
 
         this.Camera = new Camera(
-            new vec3(-200, 50, -200), 0, 0
+            new vec3(-200, 0, 0), 0, 0
         );
 
         this.addAxis();
-        // this.addField();
+        this.addField();
 
         this.domiq();
 
         setInterval(() => this.draw(), 1000 / 100);
-        // this.draw();
+        // setTimeout(() => this.draw(), 1000 / 100);
     }
 
     private addAxis(): void {
         // x - red
         this.Container.Shapes.push(
-            new Line(this, new vec4(), new vec4(100, 0), 'red', 5));
+            new Line(this, new vec4(), new vec4(100, 0, 0), 'red', 5));
 
         // y - green
         this.Container.Shapes.push(
-            new Line(this, new vec4(), new vec4(0, 100), 'green', 5));
+            new Line(this, new vec4(), new vec4(0, 100, 0), 'green', 5));
 
         // z - blue
         this.Container.Shapes.push(
@@ -52,14 +53,14 @@ export class Scene {
         let step = 50;
         let numLines = 20;
 
-        for (let x = -step * numLines; x < step * numLines; x += step) {
+        for (let x = -step * numLines; x <= step * numLines; x += step) {
             this.Container.Shapes.push(new Line(this,
                 new vec4(x, 0, -step * numLines),
                 new vec4(x, 0, step * numLines),
                 'grey', 2));
         }
 
-        for (let z = -step * numLines; z < step * numLines; z += step) {
+        for (let z = -step * numLines; z <= step * numLines; z += step) {
             this.Container.Shapes.push(new Line(this,
                 new vec4(-step * numLines, 0, z),
                 new vec4(step * numLines, 0, z),
@@ -164,8 +165,10 @@ export class Scene {
         DepthVS.InverseViewport = this.Renderer.getInverseViewport();
         DepthVS.CalculateMatrix();
 
+        Frustum.Instance.recalculate(DepthVS.ViewMatrix, DepthVS.Projection);
         // mat4.debug(DepthVS.ViewMatrix, "ViewMatrix:");
         // mat4.debug(DepthVS.Projection, "Projection:");
+        // mat4.debug(mat4.mul(DepthVS.ViewMatrix, DepthVS.Projection), 'Peremnojennoe');
         // mat4.debug(DepthVS.Viewport, "Viewport:");
 
         this.Camera.update();

@@ -136,15 +136,26 @@ export class mat4 {
      * @param worldUp Вектор, направленный вверх
      */
     static lookAt(eye: vec3, target: vec3, worldUp: vec3 = new vec3(0,1,0)): mat4 {
-        let f = vec3.minus(target, eye).normalize();
-        let s = vec3.cross(f, worldUp.normalize()).normalize();
-        let u = vec3.cross(s, f).normalize();
+        // let f = vec3.minus(target, eye).normalize();
+        // let s = vec3.cross(f, worldUp.normalize()).normalize();
+        // let u = vec3.cross(s, f).normalize();
+        //
+        // return new mat4([
+        //     s.x, s.y, -f.x, 0,
+        //     s.y, u.y, -f.y, 0,
+        //     s.z, u.z, -f.z, 0,
+        //     -vec3.dot(s, eye), -vec3.dot(u, eye), vec3.dot(f, eye), 1
+        // ]);
+
+        let f = vec3.minus(eye, target).normalize();
+        let r = vec3.cross(worldUp.normalize(), f).normalize();
+        let u = vec3.cross(f, r);
 
         return new mat4([
-            s.x, u.x, -f.x, 0,
-            s.y, u.y, -f.y, 0,
-            s.z, u.z, -f.z, 0,
-            -vec3.dot(s, eye), -vec3.dot(u, eye), vec3.dot(f, eye), 1
+            r.x, u.x, f.x, 0,
+            r.y, u.y, f.y, 0,
+            r.z, u.z, f.z, 0,
+            -vec3.dot(r, eye), -vec3.dot(u, eye), -vec3.dot(f, eye), 1
         ]);
     }
 
