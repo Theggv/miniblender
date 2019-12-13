@@ -1,5 +1,5 @@
 import {IShape} from "../IShape";
-import {vec3, vec4} from "../../math";
+import {mat4, vec3, vec4} from "../../math";
 import {Vertex} from "./Vertex";
 import {Scene} from "../../scene/Scene";
 import {Frustum} from "../../renderer/Frustum";
@@ -24,23 +24,51 @@ export class Line extends IShape {
         this.Width = width;
     }
 
-    Move(vec: vec4) {
+    Move(vec: vec3) {
+        this.from.Move(vec);
+        this.to.Move(vec);
+
+        this.HasChanges = true;
     }
 
-    Rotate(vec: vec4) {
+
+    Rotate(vec: vec3, point: vec3 = null) {
+        if(!point) {
+            let start = this.from.Point;
+            let end = this.to.Point;
+
+            point = new vec3(
+                (start.x + end.x) / 2,
+                (start.y + end.y) / 2,
+                (start.z + end.z) / 2
+            );
+        }
+
+        let mat = mat4.translate(point.reverse())
+            .mul(mat4.rotateX(vec.x))
+            .mul(mat4.rotateY(vec.y))
+            .mul(mat4.rotateZ(vec.z))
+            .mul(mat4.translate(point));
+
+        this.MulMatrix(mat);
+
+        this.hasChanges = true;
     }
 
-    Scale(vec: vec4) {
+    Scale(vec: vec3) {
+        this.hasChanges = false;
     }
 
     Render(): void {
+        let color = this.isSelected ? 'aqua' : this.Color;
+
         let isFromVisible = this.from.IsVisible();
         let isToVisible = this.to.IsVisible();
 
         if (isFromVisible && isToVisible) {
             this.scene.Renderer.drawLine(
                 this.from.ToView(), this.to.ToView(),
-                this.Color, this.Width
+                color, this.Width
             );
 
             return;
@@ -71,7 +99,7 @@ export class Line extends IShape {
             this.scene.Renderer.drawLine(
                 DepthVS.Transform(new vec4(start.x, start.y, start.z)),
                 DepthVS.Transform(new vec4(end.x, end.y, end.z)),
-                this.Color, this.Width
+                color, this.Width
             );
 
         } else if (isFromVisible) {
@@ -83,7 +111,7 @@ export class Line extends IShape {
             this.scene.Renderer.drawLine(
                 this.from.ToView(),
                 DepthVS.Transform(new vec4(to.x, to.y, to.z)),
-                this.Color, this.Width
+                color, this.Width
             );
 
         } else if (isToVisible) {
@@ -95,7 +123,7 @@ export class Line extends IShape {
             this.scene.Renderer.drawLine(
                 this.to.ToView(),
                 DepthVS.Transform(new vec4(from.x, from.y, from.z)),
-                this.Color, this.Width
+                color, this.Width
             );
         }
     }
@@ -118,5 +146,24 @@ export class Line extends IShape {
             return false;
 
         return true;
+    }
+
+    MulMatrix(mat: mat4): void {
+        this.from.MulMatrix(mat);
+        this.to.MulMatrix(mat);
+
+        this.hasChanges = true;
+    }
+
+    IsCollide(ray: line3): number {
+        let triggerDistance = 1;
+
+        // let dist = ray.distToLine(line3.fromTwoPoints(this.from.Point, this.to.Point));
+        let dist = ray.distToLine(this.from.Point, this.to.Point);
+
+        if(dist < triggerDistance)
+            return dist;
+
+        return -1;
     }
 }

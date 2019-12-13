@@ -6,6 +6,7 @@ import {line3} from "../math/line3";
 
 export class CameraControl {
     private pressedKeys;
+    private cameraKeys;
     private lastPos: vec2;
     private cam: Camera;
 
@@ -50,6 +51,19 @@ export class CameraControl {
             else if(e.code == 'KeyD') {
                 this.pressedKeys |= (1 << 3);
             }
+
+            if(e.code == 'ArrowLeft') {
+                this.cameraKeys |= (1 << 0);
+            }
+            else if(e.code == 'ArrowRight') {
+                this.cameraKeys |= (1 << 1);
+            }
+            else if(e.code == 'ArrowUp') {
+                this.cameraKeys |= (1 << 2);
+            }
+            else if(e.code == 'ArrowDown') {
+                this.cameraKeys |= (1 << 3);
+            }
         });
 
         document.addEventListener('keyup', (e: any) => {
@@ -65,15 +79,24 @@ export class CameraControl {
             else if(e.code == 'KeyD') {
                 this.pressedKeys &= ~(1 << 3);
             }
+
+            if(e.code == 'ArrowLeft') {
+                this.cameraKeys &= ~(1 << 0);
+            }
+            else if(e.code == 'ArrowRight') {
+                this.cameraKeys &= ~(1 << 1);
+            }
+            else if(e.code == 'ArrowUp') {
+                this.cameraKeys &= ~(1 << 2);
+            }
+            else if(e.code == 'ArrowDown') {
+                this.cameraKeys &= ~(1 << 3);
+            }
         });
 
         document.getElementById('canv-main')
             .addEventListener('mousedown', (e: any) => {
             this.lastPos = new vec2(e.layerX, e.layerY);
-
-            let ray = new line3(TraceVS.trace(this.lastPos), this.cam.Position);
-
-            console.log(ray.distToPoint(new vec3(0, 100, 0)));
         });
 
         document.getElementById('canv-main')
@@ -107,5 +130,21 @@ export class CameraControl {
         // D
         if (this.pressedKeys & (1 << 3))
             this.cam.Position = vec3.minus(this.cam.Position, vec3.mulScalar(this.cam.Right, this.Speed));
+
+        // ArrowLeft
+        if (this.cameraKeys & (1 << 0))
+            this.cam.AddAngles(new vec3(-1, 0));
+
+        // ArrowRight
+        if (this.cameraKeys & (1 << 1))
+            this.cam.AddAngles(new vec3(1, 0));
+
+        // ArrowUp
+        if (this.cameraKeys & (1 << 2))
+            this.cam.AddAngles(new vec3(0, 1));
+
+        // ArrowDown
+        if (this.cameraKeys & (1 << 3))
+            this.cam.AddAngles(new vec3(0, -1));
     }
 }

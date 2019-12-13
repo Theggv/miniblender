@@ -2,10 +2,11 @@ import {Camera, ViewMod} from "./Camera";
 import {Renderer} from "../renderer/Renderer";
 import {Container} from "./Container";
 import {mat4, radians, Rect, vec3, vec4} from "../math";
-import {Box, Line, Plane} from "../shape/primitives";
+import {Line, Plane} from "../shape/primitives";
 import {DepthVS} from "../shader/DepthVS";
 import {FPSCounter} from "../util/FPSCounter";
 import {Frustum} from "../renderer/Frustum";
+import {Box} from "../shape/primitives/Box";
 
 export class Scene {
     private fpsCounter: FPSCounter;
@@ -37,15 +38,15 @@ export class Scene {
 
     private addAxis(): void {
         // x - red
-        this.Container.Shapes.push(
+        this.Container.StaticObjects.add(
             new Line(this, new vec4(), new vec4(100, 0, 0), 'red', 5));
 
         // y - green
-        this.Container.Shapes.push(
+        this.Container.StaticObjects.add(
             new Line(this, new vec4(), new vec4(0, 100, 0), 'green', 5));
 
         // z - blue
-        this.Container.Shapes.push(
+        this.Container.StaticObjects.add(
             new Line(this, new vec4(), new vec4(0, 0, 100), 'blue', 5));
     }
 
@@ -54,14 +55,14 @@ export class Scene {
         let numLines = 20;
 
         for (let x = -step * numLines; x <= step * numLines; x += step) {
-            this.Container.Shapes.push(new Line(this,
+            this.Container.StaticObjects.add(new Line(this,
                 new vec4(x, 0, -step * numLines),
                 new vec4(x, 0, step * numLines),
                 'grey', 2));
         }
 
         for (let z = -step * numLines; z <= step * numLines; z += step) {
-            this.Container.Shapes.push(new Line(this,
+            this.Container.StaticObjects.add(new Line(this,
                 new vec4(-step * numLines, 0, z),
                 new vec4(step * numLines, 0, z),
                 'grey', 2));
@@ -74,20 +75,20 @@ export class Scene {
         let offset = new vec4(30, 0, 10);
 
         // korobka 150x100x50
-        this.Container.Shapes.push(new Box(this,
+        this.Container.DynamicObjects.add(new Box(this,
             offset,
             new vec4(offset.x + 150, offset.y + 50, offset.z + 100)
         ));
 
         // krisha 150x100x30
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x, offset.y + 50, offset.z),
             new vec4(offset.x + 150, offset.y + 50, offset.z),
             new vec4(offset.x + 150, offset.y + 80, offset.z + 50),
             new vec4(offset.x, offset.y + 80, offset.z + 50)
         ));
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x, offset.y + 50, offset.z + 100),
             new vec4(offset.x + 150, offset.y + 50, offset.z + 100),
             new vec4(offset.x + 150, offset.y + 80, offset.z + 50),
@@ -96,21 +97,21 @@ export class Scene {
 
         // okna
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 20, offset.y + 15, offset.z),
             new vec4(offset.x + 50, offset.y + 15, offset.z),
             new vec4(offset.x + 50, offset.y + 35, offset.z),
             new vec4(offset.x + 20, offset.y + 35, offset.z),
         ));
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 60, offset.y + 15, offset.z),
             new vec4(offset.x + 90, offset.y + 15, offset.z),
             new vec4(offset.x + 90, offset.y + 35, offset.z),
             new vec4(offset.x + 60, offset.y + 35, offset.z),
         ));
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 100, offset.y + 15, offset.z),
             new vec4(offset.x + 130, offset.y + 15, offset.z),
             new vec4(offset.x + 130, offset.y + 35, offset.z),
@@ -120,21 +121,21 @@ export class Scene {
 
         // okna s drugoy storoni
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 20, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 50, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 50, offset.y + 35, offset.z + 100),
             new vec4(offset.x + 20, offset.y + 35, offset.z + 100),
         ));
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 60, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 90, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 90, offset.y + 35, offset.z + 100),
             new vec4(offset.x + 60, offset.y + 35, offset.z + 100),
         ));
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 100, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 130, offset.y + 15, offset.z + 100),
             new vec4(offset.x + 130, offset.y + 35, offset.z + 100),
@@ -143,7 +144,7 @@ export class Scene {
 
         // dver'
 
-        this.Container.Shapes.push(new Plane(this,
+        this.Container.DynamicObjects.add(new Plane(this,
             new vec4(offset.x + 150, offset.y, offset.z + 30),
             new vec4(offset.x + 150, offset.y, offset.z + 70),
             new vec4(offset.x + 150, offset.y + 40, offset.z + 70),

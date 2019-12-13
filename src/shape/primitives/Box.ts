@@ -1,11 +1,18 @@
 import {IShape} from "../IShape";
 import {Scene} from "../../scene/Scene";
-import {vec4} from "../../math";
+import {mat4, vec4} from "../../math";
 import {Plane} from "./Plane";
 import {Line} from "./Line";
+import {line3} from "../../math/line3";
 
 export class Box extends IShape {
     private model: IShape[] = [];
+
+    set IsSelected(value: boolean) {
+        for (let shape of this.model) {
+            shape.IsSelected = value;
+        }
+    }
 
     constructor(scene: Scene, mins: vec4, maxs: vec4) {
         super(scene);
@@ -62,5 +69,24 @@ export class Box extends IShape {
 
     IsVisible(): boolean {
         return true;
+    }
+
+    MulMatrix(mat: mat4): void {
+    }
+
+    IsCollide(ray: line3): number {
+        let minDist = Number.MAX_VALUE;
+
+        for(let plane of this.model) {
+            let temp = plane.IsCollide(ray);
+
+            if(temp != -1 && temp < minDist)
+                minDist = temp;
+        }
+
+        if(minDist == Number.MAX_VALUE)
+            return -1;
+
+        return minDist;
     }
 }

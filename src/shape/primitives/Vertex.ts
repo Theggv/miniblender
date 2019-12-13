@@ -3,6 +3,7 @@ import {vec4, mat4, vec3} from "../../math";
 import {Scene} from "../../scene/Scene";
 import {DepthVS} from "../../shader/DepthVS";
 import {Frustum} from "../../renderer/Frustum";
+import {line3} from "../../math/line3";
 
 export class Vertex extends IShape {
     private model: vec4;
@@ -29,16 +30,16 @@ export class Vertex extends IShape {
         this.model = vec;
     }
 
-    Move(vec: vec4) {
-        this.model = mat4.mulVec(this.model, mat4.translate(vec));
+    Move(vec: vec3) {
+        this.model = this.model.mulVecMat(mat4.translate(vec));
         this.HasChanges = true;
     }
 
-    Rotate(vec: vec4) {
+    Rotate(vec: vec3, point: vec3) {
         this.HasChanges = false;
     }
 
-    Scale(vec: vec4) {
+    Scale(vec: vec3) {
         this.HasChanges = false;
     }
 
@@ -68,5 +69,21 @@ export class Vertex extends IShape {
 
     IsVisible(): boolean {
         return Frustum.Instance.IsPointInside(this.Point);
+    }
+
+    MulMatrix(mat: mat4): void {
+        this.model = this.model.mulVecMat(mat).normalize3();
+        this.hasChanges = true;
+    }
+
+    IsCollide(ray: line3): number {
+        let triggerDistance = 5;
+
+        let dist = ray.distToPoint(this.Point);
+
+        if(dist < 5)
+            return vec3.minus(this.Point, ray.point).length();
+
+        return -1;
     }
 }

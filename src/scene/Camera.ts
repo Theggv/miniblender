@@ -35,7 +35,7 @@ export class Camera {
 
     static PerspectiveMatrix(width: number, height: number): mat4 {
         return mat4.perspective(
-            90, width / height, 1, 1000);
+            90, width / height, 1, 10000);
     }
 
     static OrthographicMatrix(width: number, height: number): mat4 {
