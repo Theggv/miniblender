@@ -1,7 +1,14 @@
 const path = require('path');
+const webpack = require('webpack');
 
 module.exports = {
-	entry: './src/index.ts',
+	entry: {
+		app: path.resolve(__dirname, './src/index.ts'),
+	},
+	output: {
+		path: path.resolve(__dirname, './dist'),
+		filename: '[name].bundle.js',
+	},
 	module: {
 		rules: [
 			{
@@ -9,18 +16,23 @@ module.exports = {
 				use: 'ts-loader',
 				exclude: /node_modules/,
 			},
-			{
-				test: /\.html?$/,
-				loader: 'raw-loader',
-				exclude: /node_modules/,
-			},
 		],
 	},
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js'],
 	},
-	output: {
-		filename: 'bundle.js',
-		path: path.resolve(__dirname, 'dist'),
+	target: 'web',
+	mode: 'development',
+	// webpack-dev-server configuration
+	devServer: {
+		historyApiFallback: true,
+		host: 'localhost',
+		contentBase: path.resolve(__dirname, './dist'),
+		watchContentBase: true,
+		compress: true,
+		open: true,
+		hot: true,
+		port: 9001,
 	},
+	plugins: [new webpack.HotModuleReplacementPlugin()],
 };

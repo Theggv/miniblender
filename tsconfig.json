@@ -6,6 +6,7 @@
 		"jsx": "react",
 		"allowJs": true,
 		"sourceMap": true,
+		"moduleResolution": "Node",
 		"lib": [
 			"dom",
 			"es5",
