@@ -51,7 +51,7 @@ export class Vertex extends IShape {
             this.ToView()
         );
 
-        console.log(this.ToView());
+        // console.log(this.ToView());
     }
 
     ToView(): vec4 {
@@ -59,10 +59,10 @@ export class Vertex extends IShape {
         vec = DepthVS.Transform(this.model);
         // vec.z = DepthVS.LinearDepthTest(vec.z);
 
-        console.log(
-            vec.x.toFixed(3),
-            vec.y.toFixed(3),
-            vec.z.toFixed(3));
+        // console.log(
+        //     vec.x.toFixed(3),
+        //     vec.y.toFixed(3),
+        //     vec.z.toFixed(3));
 
         return vec;
     }

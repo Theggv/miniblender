@@ -92,10 +92,10 @@ export class vec4 extends vec3 {
         if (message)
             console.log(message);
 
-        console.log(
-            vec.x.toFixed(3) + '\t' +
-            vec.y.toFixed(3) + '\t' +
-            vec.z.toFixed(3) + '\t' +
-            vec.w.toFixed(3));
+        // console.log(
+        //     vec.x.toFixed(3) + '\t' +
+        //     vec.y.toFixed(3) + '\t' +
+        //     vec.z.toFixed(3) + '\t' +
+        //     vec.w.toFixed(3));
     }
 }

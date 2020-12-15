@@ -25,7 +25,7 @@ export class Frustum {
         this.planes = [];
 
         let clip = view.mul(proj);
-        clip.debug('Matrix:');
+        // clip.debug('Matrix:');
 
         // right
         this.planes.push(new plane(this.normalize(
@@ -76,7 +76,7 @@ export class Frustum {
         )));
 
         for (let plane of this.planes) {
-            console.log(plane);
+            // console.log(plane);
         }
     }
 

@@ -283,25 +283,25 @@ export class mat4 {
         if(message)
             console.log(message);
 
-        console.log(
-            mat.m[0].toFixed(3) + '\t' +
-            mat.m[1].toFixed(3) + '\t' +
-            mat.m[2].toFixed(3) + '\t' +
-            mat.m[3].toFixed(3));
-        console.log(
-            mat.m[4].toFixed(3) + '\t' +
-            mat.m[5].toFixed(3) + '\t' +
-            mat.m[6].toFixed(3) + '\t' +
-            mat.m[7].toFixed(3));
-        console.log(
-            mat.m[8].toFixed(3) + '\t' +
-            mat.m[9].toFixed(3) + '\t' +
-            mat.m[10].toFixed(3)+ '\t' +
-            mat.m[11].toFixed(3));
-        console.log(
-            mat.m[12].toFixed(3) + '\t' +
-            mat.m[13].toFixed(3) + '\t'+
-            mat.m[14].toFixed(3) + '\t' +
-            mat.m[15].toFixed(3));
+        // console.log(
+        //     mat.m[0].toFixed(3) + '\t' +
+        //     mat.m[1].toFixed(3) + '\t' +
+        //     mat.m[2].toFixed(3) + '\t' +
+        //     mat.m[3].toFixed(3));
+        // console.log(
+        //     mat.m[4].toFixed(3) + '\t' +
+        //     mat.m[5].toFixed(3) + '\t' +
+        //     mat.m[6].toFixed(3) + '\t' +
+        //     mat.m[7].toFixed(3));
+        // console.log(
+        //     mat.m[8].toFixed(3) + '\t' +
+        //     mat.m[9].toFixed(3) + '\t' +
+        //     mat.m[10].toFixed(3)+ '\t' +
+        //     mat.m[11].toFixed(3));
+        // console.log(
+        //     mat.m[12].toFixed(3) + '\t' +
+        //     mat.m[13].toFixed(3) + '\t'+
+        //     mat.m[14].toFixed(3) + '\t' +
+        //     mat.m[15].toFixed(3));
     }
 }
